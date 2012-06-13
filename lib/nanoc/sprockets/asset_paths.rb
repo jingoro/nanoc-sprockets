@@ -2,8 +2,10 @@ module Nanoc::Sprockets
   class AssetPaths
     class AssetNotPrecompiledError < StandardError; end
 
-    def initialize # config
-      @config = ::Nanoc::Sprockets.config
+    attr_reader :context
+
+    def initialize(context)
+      @context = context
     end
 
     def asset_for(source, ext)
@@ -16,12 +18,12 @@ module Nanoc::Sprockets
     end
 
     def digest_for(logical_path)
-      if @config.digest && @config.digests && (digest = @config.digests[logical_path])
+      if config.digest && context.digests && (digest = context.digests[logical_path])
         return digest
       end
 
-      if @config.compile
-        if @config.digest && asset = asset_environment[logical_path]
+      if config.compile
+        if config.digest && asset = asset_environment[logical_path]
           return asset.digest_path
         end
         return logical_path
@@ -55,7 +57,7 @@ module Nanoc::Sprockets
       unless is_uri?(source)
         source = rewrite_extension(source, dir, options[:ext]) if options[:ext]
         source = rewrite_asset_path(source, dir, options)
-        source = rewrite_relative_url_root(source, @config.relative_url_root)
+        source = rewrite_relative_url_root(source, config.relative_url_root)
         source = rewrite_host_and_protocol(source, options[:protocol])
       end
       source
@@ -82,7 +84,7 @@ module Nanoc::Sprockets
     end
 
     def compute_asset_host(source)
-      if host = @config.host
+      if host = config.host
         if host.respond_to?(:call)
           args = [source]
           arity = arity_of(host)
@@ -98,7 +100,7 @@ module Nanoc::Sprockets
     end
 
     def default_protocol
-      @config.default_protocol || (request.nil?? :relative : :request)
+      config.default_protocol || (request.nil?? :relative : :request)
     end
 
     def compute_protocol(protocol)
@@ -132,7 +134,12 @@ module Nanoc::Sprockets
     end
 
     def asset_environment
-      ::Nanoc::Sprockets.environment
+      context.environment
     end
+
+    def config
+      context.config
+    end
+
   end
 end

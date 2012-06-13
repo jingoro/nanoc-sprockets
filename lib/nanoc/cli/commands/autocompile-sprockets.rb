@@ -40,11 +40,12 @@ module Nanoc::CLI::Commands
 
       # Build app
       autocompiler = Nanoc::Extra::AutoCompiler.new('.')
+      sprockets = Nanoc::Sprockets.context site
       app = Rack::Builder.new do
         use Rack::CommonLogger, $stderr
         use Rack::ShowExceptions
         map '/assets' do
-          run Nanoc::Sprockets.environment
+          run sprockets.environment
         end
         map '/' do
           run autocompiler

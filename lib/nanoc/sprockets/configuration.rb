@@ -1,28 +1,31 @@
 module Nanoc::Sprockets
-  DEFAULT_OPTIONS = {
-    app_root: '.',
-    debug: false,
-    digest: true,
-    compile: true,
-    compress: false,
-    host: nil,
-    manifest_path: 'output/assets',
-    paths: %w[images javascripts stylesheets],
-    precompile: [ /\w+\.(?!js|css).+/, /application.(css|js)$/ ],
-    prefix: 'assets',
-    relative_url_root: '',
-    css_compressor: false,
-    js_compressor: false
+
+  DEFAULT_CONFIGURATION = {
+    :app_root       => '.',
+    :compress       => false,
+    :compile        => true,
+    :compile_paths  => [ /\w+\.(?!js|css).+/, /application.(css|js)$/ ],
+    :css_compressor => :yui,
+    :debug          => false,
+    :digest         => true,
+    :host           => nil,
+    :js_compressor  => :uglifier,
+    :manifest       => true,
+    :manifest_path  => 'output/assets',
+    :paths          => %w[images javascripts stylesheets],
+    :prefix         => 'assets',
+    :relative_url_root => '',
+    :target         => 'output/assets',
   }
 
-  class Configuration < Struct.new(*DEFAULT_OPTIONS.keys)
-    attr_accessor *DEFAULT_OPTIONS.keys, :digests
-
-    def initialize
-      DEFAULT_OPTIONS.each do |key, value|
-        send "#{key}=".to_sym, value
+  class Configuration < Struct.new(*DEFAULT_CONFIGURATION.keys)
+    attr_accessor *DEFAULT_CONFIGURATION.keys
+    def initialize(context)
+      nanoc_config = context.site.config[:sprockets] || {}
+      DEFAULT_CONFIGURATION.each do |key, value|
+        send :"#{key}=", nanoc_config[key] || value
       end
-      @digests = {}
     end
   end
+
 end

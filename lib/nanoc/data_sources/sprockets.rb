@@ -30,12 +30,12 @@ module Nanoc::DataSources
 
   private
 
-    def environment
-      ::Nanoc::Sprockets.environment
+    def context
+      @context ||= ::Nanoc::Sprockets.context(@site)
     end
     
     def assets
-      environment.each_logical_path.map { |x| environment.find_asset(x) }.compact.uniq
+      context.environment.each_logical_path.map { |x| environment.find_asset(x) }.compact.uniq
     end
 
   end

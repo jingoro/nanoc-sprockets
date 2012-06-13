@@ -30,13 +30,13 @@ module Nanoc
     
     private
     
-      def environment
-        Nanoc::Sprockets.environment
-      end
-
-      def find_asset(logical_path)
-        environment.find_asset logical_path
-      end
+      # def environment
+      #   Nanoc::Sprockets.environment
+      # end
+      # 
+      # def find_asset(logical_path)
+      #   environment.find_asset logical_path
+      # end
       #   environment.each_logical_path.map { |x| environment.find_asset(x) }.compact.uniq
       # end
 

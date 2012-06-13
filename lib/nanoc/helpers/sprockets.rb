@@ -58,13 +58,17 @@ module Nanoc::Helpers
     end
 
     def asset_paths
-      @asset_paths ||= ::Nanoc::Sprockets::AssetPaths.new
+      sprockets_context.asset_paths
     end
 
   private
 
+    def sprockets_context
+      @sprockets_context ||= ::Nanoc::Sprockets.context(site)
+    end
+
     def sprockets_config
-      ::Nanoc::Sprockets.config
+      sprockets_context.config
     end
     
     def sprockets_extract_options!(array)

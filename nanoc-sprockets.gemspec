@@ -16,7 +16,7 @@ Gem::Specification.new do |gem|
   gem.version       = Nanoc::Sprockets::VERSION
 
   gem.add_dependency 'nanoc', '>= 3.4.0'
-  gem.add_dependency 'sprockets', '>= 2.4.0'
+  gem.add_dependency 'sprockets', '~> 2.1.0'
   gem.add_dependency 'rack', '>= 0'
   gem.add_dependency 'mime-types', '>= 0'
   gem.add_development_dependency 'rake'
